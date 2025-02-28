@@ -87,9 +87,9 @@ end
 while isvalid(s)
     if s.NumBytesAvailable >= packet_length
         % Read available data in multiples of the packet length
-        data = read(s, packet_length * floor(s.NumBytesAvailable / packet_length), 'uint8');
+        data = read(s, packet_length * floor(s.NumBytesAvailable / packet_length), 'uint8'); % read in bulk because buffer may be stored way more than packet length.
         num_packets = length(data) / packet_length;
-        data_matrix = reshape(data, packet_length, num_packets)';
+        data_matrix = reshape(data, packet_length, num_packets)'; % build data matrix in "num_packets x packet_length"
 
         % Convert internal timestamp to seconds
         t = getTimestampInSeconds(data_matrix);
@@ -110,7 +110,7 @@ while isvalid(s)
         Gz = double(bitor(bitshift(int16(data_matrix(:, gyro_start_index + 8)), 8), ...
                           int16(data_matrix(:, gyro_start_index + 7)))) * 2000 / 32768;
 
-        % Magnetic data conversion (divide by 1000 for scale)
+        % Magnetic data conversion (divide by 1000 for scale for uT scale)
         Hx = double(bitor(bitshift(int16(data_matrix(:, magnetic_start_index + 4)), 8), ...
                           int16(data_matrix(:, magnetic_start_index + 3)))) / 1000;
         Hy = double(bitor(bitshift(int16(data_matrix(:, magnetic_start_index + 6)), 8), ...
@@ -118,7 +118,7 @@ while isvalid(s)
         Hz = double(bitor(bitshift(int16(data_matrix(:, magnetic_start_index + 8)), 8), ...
                           int16(data_matrix(:, magnetic_start_index + 7)))) / 1000;
 
-        % Quaternion data conversion (multiply by 180/32768 for angle in degrees)
+        % Quaternion data conversion (multiply by 180/32768)
         Q0 = double(bitor(bitshift(int16(data_matrix(:, quaternion_start_index + 4)), 8), ...
                           int16(data_matrix(:, quaternion_start_index + 3)))) * 180 / 32768;
         Q1 = double(bitor(bitshift(int16(data_matrix(:, quaternion_start_index + 6)), 8), ...
