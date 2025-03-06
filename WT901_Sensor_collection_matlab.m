@@ -15,7 +15,7 @@ packet_length = 99;
 % Data block start indices (Refer to sections 7.1.2 ~ 7.1.5)
 accel_start_index = 11;     % Accelerometer block header (0x55, 0x51)
 gyro_start_index = 22;      % Gyroscope block header (0x55, 0x52)
-quaternion_start_index = 66;% Quaternion block header (0x55, 0x56)
+quaternion_start_index = 77;% Quaternion block header (0x55, 0x57)
 magnetic_start_index = 44;  % Magnetic block header (0x55, 0x54)
 
 % Data storage structure and settings
